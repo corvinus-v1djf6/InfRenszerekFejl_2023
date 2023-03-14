@@ -67,11 +67,16 @@ namespace Gyak04
                 xlApp = null;
             }
 
+            xlSheet.get_Range(
+             GetCell(2, 1),
+             GetCell(1 + values.GetLength(0), values.GetLength(1))).Value2 = values;
+
         }
 
         public void CreateTable()
         {
-            string[] headers = new string[] {
+            string[] headers = new string[]
+            {
                 "Kód",
                 "Eladó",
                 "Oldal",
@@ -80,8 +85,11 @@ namespace Gyak04
                 "Szobák száma",
                 "Alapterület (m2)",
                 "Ár (mFt)",
-                "Négyzetméter ár (Ft/m2)"};
+                "Négyzetméter ár (Ft/m2)"
+            };
         }
+
+
 
         private string GetCell(int x, int y)
         {

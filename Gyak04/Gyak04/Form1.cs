@@ -18,11 +18,18 @@ namespace Gyak04
         RealEstateEntities context = new RealEstateEntities();
         List<Flat> Flats;
 
+        Excel.Application xlApp;
+        Excel.Workbook xlWB;
+        Excel.Worksheet xlSheet;
+
+        object[,] values = new object[Flats.Count, headers.Length];
+
 
         public Form1()
         {
             InitializeComponent();
             LoadData();
+            CreateExcel(); //createexcel meghívása
 
         }
 
@@ -31,5 +38,85 @@ namespace Gyak04
             Flats = context.Flats.ToList();
         }
 
+        public void CreateExcel()
+        {
+            try
+            {
+                xlApp = new Excel.Application();
+
+                xlWB = xlApp.Workbooks.Add(Missing.Value);
+
+                xlSheet = xlWB.ActiveSheet;
+
+                // Tábla létrehozása
+                CreateTable();
+
+                // Control átadása a felhasználónak
+                xlApp.Visible = true;
+                xlApp.UserControl = true;
+            }
+            catch (Exception ex) // Hibakezelés a beépített hibaüzenettel
+            {
+                string errMsg = string.Format("Error: {0}\nLine: {1}", ex.Message, ex.Source);
+                MessageBox.Show(errMsg, "Error");
+
+                // Hiba esetén az Excel applikáció bezárása automatikusan
+                xlWB.Close(false, Type.Missing, Type.Missing);
+                xlApp.Quit();
+                xlWB = null;
+                xlApp = null;
+            }
+
+        }
+
+        public void CreateTable()
+        {
+            string[] headers = new string[] {
+                "Kód",
+                "Eladó",
+                "Oldal",
+                "Kerület",
+                "Lift",
+                "Szobák száma",
+                "Alapterület (m2)",
+                "Ár (mFt)",
+                "Négyzetméter ár (Ft/m2)"};
+        }
+
+        private string GetCell(int x, int y)
+        {
+            string ExcelCoordinate = "";
+            int dividend = y;
+            int modulo;
+
+            while (dividend > 0)
+            {
+                modulo = (dividend - 1) % 26;
+                ExcelCoordinate = Convert.ToChar(65 + modulo).ToString() + ExcelCoordinate;
+                dividend = (int)((dividend - modulo) / 26);
+            }
+            ExcelCoordinate += x.ToString();
+
+            return ExcelCoordinate;
+        }
+
+
     }
-}
+
+
+}       
+/*    
+        for (int i = 0; i<length; i++)
+			{
+            xlSheet.Cells[1, 1] = headers[0];
+			}
+
+        int counter = 0;
+        foreach (Flat f in Flats)
+	        {
+            values[counter, 0] = f.Code;
+            values[counter, 8] = "";
+            counter++;
+            }
+*/
+

@@ -22,7 +22,7 @@ namespace Gyak04
         Excel.Workbook xlWB;
         Excel.Worksheet xlSheet;
 
-        object[,] values = new object[Flats.Count, headers.Length];
+      
 
 
         public Form1()
@@ -35,7 +35,7 @@ namespace Gyak04
 
         private void LoadData()
         {
-            Flats = context.Flats.ToList();
+            Flats = context.Flat.ToList();
         }
 
         public void CreateExcel()
@@ -87,6 +87,23 @@ namespace Gyak04
                 "Ár (mFt)",
                 "Négyzetméter ár (Ft/m2)"
             };
+
+            for (int i = 0; i < headers.Length; i++)
+            {
+                xlSheet.Cells[/*sor*/1, /*oszlop*/i + 1] = headers[i];
+            }
+
+            int counter = 0;
+            foreach (Flat f in Flats)
+            {
+                values[counter, 0] = f.Code;
+  
+                values[counter, 8] = "";
+                counter++;
+            }
+
+
+            object[,] values = new object[Flats.Count, headers.Length];
         }
 
 
@@ -113,18 +130,4 @@ namespace Gyak04
 
 
 }       
-/*    
-        for (int i = 0; i<length; i++)
-			{
-            xlSheet.Cells[1, 1] = headers[0];
-			}
-
-        int counter = 0;
-        foreach (Flat f in Flats)
-	        {
-            values[counter, 0] = f.Code;
-            values[counter, 8] = "";
-            counter++;
-            }
-*/
 
